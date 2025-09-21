@@ -4,7 +4,9 @@ import {
   mockDashboardData, 
   mockAlertsData, 
   mockAnalyticsData, 
-  mockApiDocsData 
+  mockApiDocsData,
+  mockServicesData,
+  mockInfrastructureData
 } from '@/data/mockData';
 
 // Types
@@ -169,7 +171,15 @@ class MockClient {
       case API_ENDPOINTS.apiDocs.authentication:
         return this.wrapResponse(mockApiDocsData.authenticationMethods as T);
       
+      case API_ENDPOINTS.services.list:
+        return this.wrapResponse(mockServicesData.services as T);
+      
       default:
+        // Handle dynamic endpoints with path parameters
+        if (endpoint.includes('/services/') && endpoint.includes('/logs')) {
+          return this.wrapResponse({ logs: ['Service log entry 1', 'Service log entry 2'] } as T);
+        }
+        
         throw new ApiError({
           message: `Mock endpoint not found: ${endpoint}`,
           status: 404,
@@ -193,6 +203,11 @@ class MockClient {
         // For alert acknowledgments and resolutions, return success
         if (endpoint.includes('/acknowledge') || endpoint.includes('/resolve')) {
           return this.wrapResponse({ success: true } as T);
+        }
+        
+        // For service restart endpoints
+        if (endpoint.includes('/services/') && endpoint.includes('/restart')) {
+          return this.wrapResponse({ success: true, message: 'Service restart initiated' } as T);
         }
         
         return this.wrapResponse({ success: true, message: 'Operation completed' } as T);

@@ -1,0 +1,4197 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:19:23Z",
+                "generateName": "accountd-6b8f96754b-",
+                "generation": 1,
+                "labels": {
+                    "app": "accountd",
+                    "pod-template-hash": "6b8f96754b"
+                },
+                "name": "accountd-6b8f96754b-m5rtk",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "accountd-6b8f96754b",
+                        "uid": "fdfd23aa-8bc4-4bdc-885c-2c82420166c5"
+                    }
+                ],
+                "resourceVersion": "10190028",
+                "uid": "8e824285-5ac3-4c8b-82ac-9633c63292ca"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/accountd"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "accountd-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "accountd",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-tl9rp",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "imagePullSecrets": [
+                    {
+                        "name": "ecr-creds"
+                    }
+                ],
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 82032,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-accountd"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-tl9rp",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:25Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:36Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:36Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://5c5f53addeb5a31f600261fb00aab72b1384189c2b9697b0191d3d02b33a66dd",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "accountd",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:19:24Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-tl9rp",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.62.72",
+                "podIPs": [
+                    {
+                        "ip": "10.0.62.72"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:19:23Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2025-09-16T11:55:03Z",
+                "generateName": "analyticsd-7f8f777487-",
+                "generation": 1,
+                "labels": {
+                    "app": "analyticsd",
+                    "pod-template-hash": "7f8f777487"
+                },
+                "name": "analyticsd-7f8f777487-n259d",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "analyticsd-7f8f777487",
+                        "uid": "b54f9c20-1c8a-4abd-9d06-f08a1c2c2606"
+                    }
+                ],
+                "resourceVersion": "9126207",
+                "uid": "a93c3e06-c9eb-498c-b29b-05b24e42f0c2"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "go",
+                            "run",
+                            "."
+                        ],
+                        "env": [
+                            {
+                                "name": "GOCACHE",
+                                "value": "/root/.cache/go-build"
+                            },
+                            {
+                                "name": "GOMODCACHE",
+                                "value": "/go/pkg/mod"
+                            },
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "analyticsd-secrets"
+                                }
+                            }
+                        ],
+                        "image": "golang:1.25.0-bookworm",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "analyticsd",
+                        "ports": [
+                            {
+                                "containerPort": 8200,
+                                "name": "http",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {
+                            "limits": {
+                                "cpu": "500m",
+                                "memory": "1Gi"
+                            },
+                            "requests": {
+                                "cpu": "10m",
+                                "memory": "100Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/app",
+                                "name": "analyticsd-files"
+                            },
+                            {
+                                "mountPath": "/go/pkg/mod",
+                                "name": "go-mod-cache"
+                            },
+                            {
+                                "mountPath": "/root/.cache/go-build",
+                                "name": "go-build-cache"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-d9lqq",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ],
+                        "workingDir": "/app"
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-43-133.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 84132,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "analyticsd-files"
+                        },
+                        "name": "analyticsd-files"
+                    },
+                    {
+                        "name": "go-mod-cache",
+                        "persistentVolumeClaim": {
+                            "claimName": "go-mod-cache-pvc"
+                        }
+                    },
+                    {
+                        "name": "go-build-cache",
+                        "persistentVolumeClaim": {
+                            "claimName": "go-build-cache-pvc"
+                        }
+                    },
+                    {
+                        "name": "kube-api-access-d9lqq",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-16T11:55:04Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-16T11:55:03Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-16T11:55:04Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-16T11:55:04Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-16T11:55:03Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "10m",
+                            "memory": "100Mi"
+                        },
+                        "containerID": "containerd://dbeaff439859f37fe4bf2b14fc7d8bcdb1cfae226e125eebda5ada41f490807c",
+                        "image": "docker.io/library/golang:1.25.0-bookworm",
+                        "imageID": "docker.io/library/golang@sha256:81dc45d05a7444ead8c92a389621fafabc8e40f8fd1a19d7e5df14e61e98bc1a",
+                        "lastState": {},
+                        "name": "analyticsd",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "500m",
+                                "memory": "1Gi"
+                            },
+                            "requests": {
+                                "cpu": "10m",
+                                "memory": "100Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-16T11:55:04Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/app",
+                                "name": "analyticsd-files"
+                            },
+                            {
+                                "mountPath": "/go/pkg/mod",
+                                "name": "go-mod-cache"
+                            },
+                            {
+                                "mountPath": "/root/.cache/go-build",
+                                "name": "go-build-cache"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-d9lqq",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.43.133",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.43.133"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.57.31",
+                "podIPs": [
+                    {
+                        "ip": "10.0.57.31"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-16T11:55:03Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:19:23Z",
+                "generateName": "analyticsd-845c465cd6-",
+                "generation": 1,
+                "labels": {
+                    "app": "analyticsd",
+                    "pod-template-hash": "845c465cd6"
+                },
+                "name": "analyticsd-845c465cd6-g7zsg",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "analyticsd-845c465cd6",
+                        "uid": "e8043291-527c-49a2-a2cb-9af07e5e00f2"
+                    }
+                ],
+                "resourceVersion": "10189736",
+                "uid": "33edcde2-9b0c-4d97-8ff2-a172ac91df95"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "go",
+                            "run",
+                            "."
+                        ],
+                        "env": [
+                            {
+                                "name": "GOCACHE",
+                                "value": "/root/.cache/go-build"
+                            },
+                            {
+                                "name": "GOMODCACHE",
+                                "value": "/go/pkg/mod"
+                            },
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "analyticsd-secrets"
+                                }
+                            }
+                        ],
+                        "image": "golang:1.25.0-bookworm",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "analyticsd",
+                        "ports": [
+                            {
+                                "containerPort": 8200,
+                                "name": "http",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {
+                            "limits": {
+                                "cpu": "500m",
+                                "memory": "1Gi"
+                            },
+                            "requests": {
+                                "cpu": "10m",
+                                "memory": "100Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/app",
+                                "name": "analyticsd-files"
+                            },
+                            {
+                                "mountPath": "/go/pkg/mod",
+                                "name": "go-mod-cache"
+                            },
+                            {
+                                "mountPath": "/root/.cache/go-build",
+                                "name": "go-build-cache"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-p4kcf",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ],
+                        "workingDir": "/app"
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 85571,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "analyticsd-files"
+                        },
+                        "name": "analyticsd-files"
+                    },
+                    {
+                        "name": "go-mod-cache",
+                        "persistentVolumeClaim": {
+                            "claimName": "go-mod-cache-pvc"
+                        }
+                    },
+                    {
+                        "name": "go-build-cache",
+                        "persistentVolumeClaim": {
+                            "claimName": "go-build-cache-pvc"
+                        }
+                    },
+                    {
+                        "name": "kube-api-access-p4kcf",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "False",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "message": "containers with unready status: [analyticsd]",
+                        "reason": "ContainersNotReady",
+                        "status": "False",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "message": "containers with unready status: [analyticsd]",
+                        "reason": "ContainersNotReady",
+                        "status": "False",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "image": "golang:1.25.0-bookworm",
+                        "imageID": "",
+                        "lastState": {},
+                        "name": "analyticsd",
+                        "ready": false,
+                        "restartCount": 0,
+                        "started": false,
+                        "state": {
+                            "waiting": {
+                                "reason": "ContainerCreating"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/app",
+                                "name": "analyticsd-files"
+                            },
+                            {
+                                "mountPath": "/go/pkg/mod",
+                                "name": "go-mod-cache"
+                            },
+                            {
+                                "mountPath": "/root/.cache/go-build",
+                                "name": "go-build-cache"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-p4kcf",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Pending",
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:19:23Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:19:23Z",
+                "generateName": "coursed-59db8b7458-",
+                "generation": 1,
+                "labels": {
+                    "app": "coursed",
+                    "pod-template-hash": "59db8b7458"
+                },
+                "name": "coursed-59db8b7458-2j2nj",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "coursed-59db8b7458",
+                        "uid": "243068ea-5015-49ca-a401-115f75a32748"
+                    }
+                ],
+                "resourceVersion": "10190088",
+                "uid": "9aa1dad8-1b3a-48e0-a3fa-0728f730ee4a"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/coursed"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "coursed-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "coursed",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-fmmrh",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 85232,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-coursed"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-fmmrh",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:26Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:38Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:38Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://57ac5df7f726b4a96e06cf225f1ff2959c73a94bb394ee2e45376cfc735b4668",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "coursed",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:19:25Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-fmmrh",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.62.76",
+                "podIPs": [
+                    {
+                        "ip": "10.0.62.76"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:19:23Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:19:23Z",
+                "generateName": "coursed-59db8b7458-",
+                "generation": 1,
+                "labels": {
+                    "app": "coursed",
+                    "pod-template-hash": "59db8b7458"
+                },
+                "name": "coursed-59db8b7458-9gptk",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "coursed-59db8b7458",
+                        "uid": "243068ea-5015-49ca-a401-115f75a32748"
+                    }
+                ],
+                "resourceVersion": "10190035",
+                "uid": "d24df5b0-4519-4d05-b807-4d11c3a18c1d"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/coursed"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "coursed-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "coursed",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-tv88x",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-43-133.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 84568,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-coursed"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-tv88x",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:25Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:36Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:36Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:23Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://4c646d3aaa028c373c7f45397e847fcb969e97eb1b0f0d1b57dc1200f8956638",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "coursed",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:19:25Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-tv88x",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.43.133",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.43.133"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.61.16",
+                "podIPs": [
+                    {
+                        "ip": "10.0.61.16"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:19:23Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:19:36Z",
+                "generateName": "coursed-59db8b7458-",
+                "generation": 1,
+                "labels": {
+                    "app": "coursed",
+                    "pod-template-hash": "59db8b7458"
+                },
+                "name": "coursed-59db8b7458-jc8kw",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "coursed-59db8b7458",
+                        "uid": "243068ea-5015-49ca-a401-115f75a32748"
+                    }
+                ],
+                "resourceVersion": "10190170",
+                "uid": "dbffe510-7e5c-47d5-9451-7b229a13ad2b"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/coursed"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "coursed-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "coursed",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-npdmq",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 81668,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-coursed"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-npdmq",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:38Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:36Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:49Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:49Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:36Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://96686588b61e6b799061e80131033f78cd0c5b5f9c2dc69565c7c16393e7ec58",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "coursed",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:19:37Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-npdmq",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.62.78",
+                "podIPs": [
+                    {
+                        "ip": "10.0.62.78"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:19:36Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:55:37+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:25:38Z",
+                "generateName": "gcd-8547648b69-",
+                "generation": 1,
+                "labels": {
+                    "app": "gcd",
+                    "pod-template-hash": "8547648b69"
+                },
+                "name": "gcd-8547648b69-zw72l",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "gcd-8547648b69",
+                        "uid": "918ae7be-5671-40ba-ba2b-65f063d17af5"
+                    }
+                ],
+                "resourceVersion": "10192014",
+                "uid": "15b86705-9824-4550-98b7-769e9d065e4b"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/gcd"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "gcd-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "gcd",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-hgmjg",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 83321,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-gcd"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-hgmjg",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:25:39Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:25:38Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:25:49Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:25:49Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:25:38Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://3265e4ed179db79a398b856d9e42e01afc16598c23e3e78c110c1e449f5e2b1e",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "gcd",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:25:39Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-hgmjg",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.62.75",
+                "podIPs": [
+                    {
+                        "ip": "10.0.62.75"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:25:38Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:38:49Z",
+                "generateName": "ldsd-fbf958c44-",
+                "generation": 1,
+                "labels": {
+                    "app": "ldsd",
+                    "pod-template-hash": "fbf958c44"
+                },
+                "name": "ldsd-fbf958c44-9xx2g",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "ldsd-fbf958c44",
+                        "uid": "cec1c6b4-753c-4b57-b359-e2562d988620"
+                    }
+                ],
+                "resourceVersion": "10196106",
+                "uid": "635fe8b4-bab8-4dfe-8dfa-5a6d0901b2d8"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/ldsd"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "ldsd-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "ldsd",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-wr8rz",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 82670,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-ldsd"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-wr8rz",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:50Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:49Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:39:01Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:39:01Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:49Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://d95ba463f6b3edd657ba77ff86892ff5fb38647f672fab5384f830614673cc55",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "ldsd",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:38:50Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-wr8rz",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.62.73",
+                "podIPs": [
+                    {
+                        "ip": "10.0.62.73"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:38:49Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:36:19Z",
+                "generateName": "mediad-7f55d6798f-",
+                "generation": 1,
+                "labels": {
+                    "app": "mediad",
+                    "pod-template-hash": "7f55d6798f"
+                },
+                "name": "mediad-7f55d6798f-97mmf",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "mediad-7f55d6798f",
+                        "uid": "dc6a3267-da5d-4ac4-91e4-7380df1681ba"
+                    }
+                ],
+                "resourceVersion": "11240616",
+                "uid": "41b732cd-aec6-417d-bda6-dcde23136e08"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/mediad"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "mediad-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "mediad",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-9g5mm",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "imagePullSecrets": [
+                    {
+                        "name": "ecr-creds"
+                    }
+                ],
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 80629,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-mediad"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-9g5mm",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:36:22Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:36:19Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:36:19Z",
+                        "message": "containers with unready status: [mediad]",
+                        "reason": "ContainersNotReady",
+                        "status": "False",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:36:19Z",
+                        "message": "containers with unready status: [mediad]",
+                        "reason": "ContainersNotReady",
+                        "status": "False",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:36:19Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://ee5e9232ab178c4e5646e7c3ac8a873ecac73a6e0406b59d2249b29614491194",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {
+                            "terminated": {
+                                "containerID": "containerd://ee5e9232ab178c4e5646e7c3ac8a873ecac73a6e0406b59d2249b29614491194",
+                                "exitCode": 1,
+                                "finishedAt": "2025-09-21T11:58:36Z",
+                                "reason": "Error",
+                                "startedAt": "2025-09-21T11:58:36Z"
+                            }
+                        },
+                        "name": "mediad",
+                        "ready": false,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 701,
+                        "started": false,
+                        "state": {
+                            "waiting": {
+                                "message": "back-off 5m0s restarting failed container=mediad pod=mediad-7f55d6798f-97mmf_default(41b732cd-aec6-417d-bda6-dcde23136e08)",
+                                "reason": "CrashLoopBackOff"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-9g5mm",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.53.176",
+                "podIPs": [
+                    {
+                        "ip": "10.0.53.176"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:36:19Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:37:13Z",
+                "generateName": "posterd-f5594977d-",
+                "generation": 1,
+                "labels": {
+                    "app": "posterd",
+                    "pod-template-hash": "f5594977d"
+                },
+                "name": "posterd-f5594977d-4tsk2",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "posterd-f5594977d",
+                        "uid": "a91b0f43-0858-4525-8e44-74e13537e0f9"
+                    }
+                ],
+                "resourceVersion": "10195532",
+                "uid": "94ec9e1e-5cce-4612-8c13-7d40839ab7af"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/posterd"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "posterd-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "posterd",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-vtdbj",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 85761,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-posterd"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-vtdbj",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:37:14Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:37:13Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:37:25Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:37:25Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:37:13Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://81e0dc51db88ee8013f1f139b07728f4c0733bce3d6d3175a677c3f1eef2b2e5",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "posterd",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:37:14Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-vtdbj",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.53.177",
+                "podIPs": [
+                    {
+                        "ip": "10.0.53.177"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:37:13Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:38:57Z",
+                "generateName": "pushd-859ddc947c-",
+                "generation": 1,
+                "labels": {
+                    "app": "pushd",
+                    "pod-template-hash": "859ddc947c"
+                },
+                "name": "pushd-859ddc947c-p9jlp",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "pushd-859ddc947c",
+                        "uid": "93b8c0ba-7091-4cad-855a-3380fb45d4b7"
+                    }
+                ],
+                "resourceVersion": "10196173",
+                "uid": "41c2b060-3d2f-4cb1-bbbb-5a67fa37b844"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/pushd"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "pushd-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "pushd",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-f577f",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 81875,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-pushd"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-f577f",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:58Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:57Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:39:09Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:39:09Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:57Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://3bec4ceb87e479abaced9db0c05f31960c02992354dfd769adfcfd48fc90dfcb",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "pushd",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:38:57Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-f577f",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.62.74",
+                "podIPs": [
+                    {
+                        "ip": "10.0.62.74"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:38:57Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:38:53Z",
+                "generateName": "sfsyncd-854db49478-",
+                "generation": 1,
+                "labels": {
+                    "app": "sfsyncd",
+                    "pod-template-hash": "854db49478"
+                },
+                "name": "sfsyncd-854db49478-hsmtf",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "sfsyncd-854db49478",
+                        "uid": "fc192aeb-8155-4373-9bea-ebaa20d8cec7"
+                    }
+                ],
+                "resourceVersion": "10196135",
+                "uid": "4c26cf73-077c-43a2-9b3b-197670644211"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/sfsyncd"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "sfsyncd-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "sfsyncd",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "500m",
+                                "memory": "1Gi"
+                            },
+                            "requests": {
+                                "cpu": "250m",
+                                "memory": "500m"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-nnbgb",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 84511,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-sfsyncd"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-nnbgb",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:54Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:53Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:39:05Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:39:05Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:38:53Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "250m",
+                            "memory": "500m"
+                        },
+                        "containerID": "containerd://ec9f2c5299c76a5f3aefa3548eaf6e4d4fc072ca6c0777e4283423c16489deb1",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "sfsyncd",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "500m",
+                                "memory": "1Gi"
+                            },
+                            "requests": {
+                                "cpu": "250m",
+                                "memory": "500m"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:38:54Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-nnbgb",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.53.178",
+                "podIPs": [
+                    {
+                        "ip": "10.0.53.178"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:38:53Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "kubectl.kubernetes.io/restartedAt": "2025-09-19T05:49:23+05:30"
+                },
+                "creationTimestamp": "2025-09-19T00:19:25Z",
+                "generateName": "urlsd-8ffd74c8f-",
+                "generation": 1,
+                "labels": {
+                    "app": "urlsd",
+                    "pod-template-hash": "8ffd74c8f"
+                },
+                "name": "urlsd-8ffd74c8f-ksd77",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "urlsd-8ffd74c8f",
+                        "uid": "c836f93a-1734-4b7a-940d-ed3761eec9c9"
+                    }
+                ],
+                "resourceVersion": "10190079",
+                "uid": "cb98eebf-e4e4-421c-94c1-23a5c423abc5"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/urlsd"
+                        ],
+                        "env": [
+                            {
+                                "name": "AWS_STS_REGIONAL_ENDPOINTS",
+                                "value": "regional"
+                            },
+                            {
+                                "name": "AWS_DEFAULT_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_REGION",
+                                "value": "ap-south-1"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+                                "value": "http://169.254.170.23/v1/credentials"
+                            },
+                            {
+                                "name": "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+                                "value": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount/eks-pod-identity-token"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "urlsd-csi"
+                                }
+                            }
+                        ],
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imagePullPolicy": "Always",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/health",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 15,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "urlsd",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/readiness",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 1
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-49dfk",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "imagePullSecrets": [
+                    {
+                        "name": "ecr-creds"
+                    }
+                ],
+                "nodeName": "ip-10-0-48-27.ap-south-1.compute.internal",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "eks-pod-identity-token",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "audience": "pods.eks.amazonaws.com",
+                                        "expirationSeconds": 83763,
+                                        "path": "eks-pod-identity-token"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "csi": {
+                            "driver": "secrets-store.csi.k8s.io",
+                            "readOnly": true,
+                            "volumeAttributes": {
+                                "secretProviderClass": "spc-urlsd"
+                            }
+                        },
+                        "name": "secrets-store-inline"
+                    },
+                    {
+                        "name": "kube-api-access-49dfk",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:27Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:25Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:38Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:38Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2025-09-19T00:19:25Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "64m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://32aea65cd214e58617d6f60ea228f4ab7a606c43d4ecc72193d5be9c48a65581",
+                        "image": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb:latest-sb",
+                        "imageID": "183631346081.dkr.ecr.ap-south-1.amazonaws.com/glad-sb@sha256:4f5acca714d9dac7c150b9f6a905cfb36a82879d3900aadd2be0be4df233ff9b",
+                        "lastState": {},
+                        "name": "urlsd",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "128m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "64m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2025-09-19T00:19:26Z"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/mnt/secrets-store",
+                                "name": "secrets-store-inline",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-49dfk",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/pods.eks.amazonaws.com/serviceaccount",
+                                "name": "eks-pod-identity-token",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "10.0.48.27",
+                "hostIPs": [
+                    {
+                        "ip": "10.0.48.27"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.0.62.77",
+                "podIPs": [
+                    {
+                        "ip": "10.0.62.77"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2025-09-19T00:19:25Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

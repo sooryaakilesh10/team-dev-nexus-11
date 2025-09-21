@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,169 +27,78 @@ import {
   Square,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  dashboardApi,
+  servicesApi,
+  alertsApi,
+  buildsApi,
+} from "@/services/api";
 
 const Infrastructure = () => {
   const { toast } = useToast();
-  const [selectedEnvironment, setSelectedEnvironment] = useState("");
+  const [selectedEnvironment, setSelectedEnvironment] = useState("production");
   const [selectedService, setSelectedService] = useState("");
 
-  const environments = ["development", "staging", "production"];
+  const [services, setServices] = useState([]);
+  const [deploymentHistory, setDeploymentHistory] = useState([]);
+  const [infraMetrics, setInfraMetrics] = useState([]);
+  const [alerts, setAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const services = [
-    {
-      name: "user-service",
-      version: "v1.2.3",
-      status: "running",
-      replicas: 3,
-      environment: "production",
-      cpu: "45%",
-      memory: "62%",
-      uptime: "99.9%",
-    },
-    {
-      name: "api-gateway",
-      version: "v2.1.0",
-      status: "running",
-      replicas: 5,
-      environment: "production",
-      cpu: "78%",
-      memory: "71%",
-      uptime: "99.8%",
-    },
-    {
-      name: "notification-service",
-      version: "v1.0.8",
-      status: "error",
-      replicas: 2,
-      environment: "production",
-      cpu: "12%",
-      memory: "34%",
-      uptime: "98.2%",
-    },
-    {
-      name: "auth-service",
-      version: "v3.4.1",
-      status: "running",
-      replicas: 4,
-      environment: "production",
-      cpu: "56%",
-      memory: "48%",
-      uptime: "99.7%",
-    },
-    {
-      name: "payment-service",
-      version: "v1.5.2",
-      status: "pending",
-      replicas: 2,
-      environment: "production",
-      cpu: "23%",
-      memory: "41%",
-      uptime: "99.5%",
-    },
-  ];
+  const environments = ["sandbox", "qa", "production"];
 
-  const deploymentHistory = [
-    {
-      id: "d-001",
-      service: "user-service",
-      version: "v1.2.3",
-      environment: "production",
-      status: "success",
-      deployedBy: "john.doe",
-      deployedAt: "2 hours ago",
-      duration: "4m 32s",
-    },
-    {
-      id: "d-002",
-      service: "api-gateway",
-      version: "v2.1.0",
-      environment: "production",
-      status: "success",
-      deployedBy: "jane.smith",
-      deployedAt: "5 hours ago",
-      duration: "6m 18s",
-    },
-    {
-      id: "d-003",
-      service: "notification-service",
-      version: "v1.0.8",
-      environment: "production",
-      status: "failed",
-      deployedBy: "mike.wilson",
-      deployedAt: "8 hours ago",
-      duration: "2m 45s",
-    },
-    {
-      id: "d-004",
-      service: "auth-service",
-      version: "v3.4.1",
-      environment: "staging",
-      status: "success",
-      deployedBy: "sarah.connor",
-      deployedAt: "1 day ago",
-      duration: "5m 12s",
-    },
-  ];
+  useEffect(() => {
+    const fetchInfrastructureData = async () => {
+      setLoading(true);
+      try {
+        // Fetch services
+        const servicesResponse = await servicesApi.getServices({
+          environment: selectedEnvironment,
+        });
+        if (servicesResponse.success) {
+          setServices(servicesResponse.data);
+        }
 
-  const infraMetrics = [
-    {
-      name: "Total Services",
-      value: "24",
-      change: "+2",
-      status: "success",
-      icon: Server,
-    },
-    {
-      name: "CPU Usage",
-      value: "68%",
-      change: "+5%",
-      status: "warning",
-      icon: Cpu,
-    },
-    {
-      name: "Memory Usage",
-      value: "72%",
-      change: "+3%",
-      status: "warning",
-      icon: MemoryStick,
-    },
-    {
-      name: "Network I/O",
-      value: "1.2GB/s",
-      change: "-0.1GB/s",
-      status: "success",
-      icon: Network,
-    },
-  ];
+        // Fetch deployment history
+        const deploymentsResponse = await dashboardApi.getRecentDeployments();
+        if (deploymentsResponse.success) {
+          setDeploymentHistory(deploymentsResponse.data);
+        }
 
-  const alerts = [
-    {
-      id: "alert-001",
-      service: "notification-service",
-      type: "error",
-      message: "High error rate detected (>5%)",
-      timestamp: "5 minutes ago",
-      severity: "critical",
-    },
-    {
-      id: "alert-002",
-      service: "api-gateway",
-      type: "warning",
-      message: "CPU usage above 75%",
-      timestamp: "15 minutes ago",
-      severity: "warning",
-    },
-    {
-      id: "alert-003",
-      service: "user-service",
-      type: "info",
-      message: "Deployment completed successfully",
-      timestamp: "2 hours ago",
-      severity: "info",
-    },
-  ];
+        // Fetch infrastructure metrics
+        const metricsResponse = await dashboardApi.getStats();
+        if (metricsResponse.success) {
+          const metricsWithIcons = metricsResponse.data.map((metric: any) => {
+            let icon = Server;
+            if (metric.name === "CPU Usage") icon = Cpu;
+            if (metric.name === "Memory Usage") icon = MemoryStick;
+            if (metric.name === "Network I/O") icon = Network;
+            return { ...metric, icon };
+          });
+          setInfraMetrics(metricsWithIcons);
+        }
 
-  const handleTriggerDeploy = () => {
+        // Fetch alerts
+        const alertsResponse = await alertsApi.getAlerts();
+        if (alertsResponse.success) {
+          setAlerts(alertsResponse.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch infrastructure data", error);
+        toast({
+          title: "An unexpected error occurred",
+          description: "Could not fetch infrastructure data.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInfrastructureData();
+  }, [selectedEnvironment, toast]);
+
+  const handleTriggerDeploy = async () => {
     if (!selectedService || !selectedEnvironment) {
       toast({
         title: "Missing Information",
@@ -199,13 +108,31 @@ const Infrastructure = () => {
       return;
     }
 
-    toast({
-      title: "Deployment Triggered",
-      description: `Deploying ${selectedService} to ${selectedEnvironment}`,
-    });
+    try {
+      const response = await buildsApi.triggerBuild({
+        service: selectedService,
+        environment: selectedEnvironment,
+        type: "deploy",
+      });
+
+       if (response.success) {
+         toast({
+           title: "Deployment Triggered",
+           description: `Deploying ${selectedService} to ${selectedEnvironment}`,
+         });
+       }
+    } catch (error) {
+      toast({
+        title: "Deployment Error",
+        description:
+          "An unexpected error occurred while triggering the deployment.",
+        variant: "destructive",
+      });
+      console.error("Deployment trigger failed", error);
+    }
   };
 
-  const handleRestartService = () => {
+  const handleRestartService = async () => {
     if (!selectedService) {
       toast({
         title: "Missing Information",
@@ -215,10 +142,80 @@ const Infrastructure = () => {
       return;
     }
 
+    try {
+      const response = await servicesApi.restartService(
+        selectedService,
+        selectedEnvironment
+      );
+       if (response.success) {
+         toast({
+           title: "Service Restart Initiated",
+           description: `Restarting ${selectedService}`,
+         });
+       }
+    } catch (error) {
+      toast({
+        title: "Restart Error",
+        description:
+          "An unexpected error occurred while restarting the service.",
+        variant: "destructive",
+      });
+      console.error("Service restart failed", error);
+    }
+  };
+
+  const handleResolveAlert = async (alertId: string) => {
+    try {
+      const response = await alertsApi.resolveAlert(alertId);
+      if (response.success) {
+        toast({
+          title: "Alert Resolved",
+          description: "Alert has been marked as resolved",
+        });
+        // Refresh alerts data
+        const alertsResponse = await alertsApi.getAlerts();
+        if (alertsResponse.success) {
+          setAlerts(alertsResponse.data);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Resolution Error",
+        description: "An unexpected error occurred while resolving the alert.",
+        variant: "destructive",
+      });
+      console.error("Alert resolution failed", error);
+    }
+  };
+
+  const handleViewLogs = async (serviceName: string) => {
+    try {
+      const response = await servicesApi.getServiceLogs(serviceName, { lines: 100 });
+      if (response.success) {
+        toast({
+          title: "Logs Retrieved",
+          description: `Fetched logs for ${serviceName}`,
+        });
+        // In a real app, this would open a logs modal or navigate to logs page
+        console.log('Service logs:', response.data);
+      }
+    } catch (error) {
+      toast({
+        title: "Logs Error",
+        description: "Could not retrieve service logs.",
+        variant: "destructive",
+      });
+      console.error("Failed to get logs", error);
+    }
+  };
+
+  const handleViewMetrics = (serviceName: string) => {
     toast({
-      title: "Service Restart Initiated",
-      description: `Restarting ${selectedService}`,
+      title: "Metrics Dashboard",
+      description: `Opening metrics for ${serviceName}`,
     });
+    // In a real app, this would navigate to a metrics dashboard
+    console.log('Opening metrics for:', serviceName);
   };
 
   const getStatusColor = (status: string) => {
@@ -265,7 +262,22 @@ const Infrastructure = () => {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {infraMetrics.map((metric) => (
+        {loading ? (
+          // Loading skeleton
+          Array.from({ length: 4 }).map((_, index) => (
+            <Card key={index} className="card-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="h-4 w-24 bg-muted animate-pulse rounded"></div>
+                <div className="h-5 w-5 bg-muted animate-pulse rounded"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-8 w-16 bg-muted animate-pulse rounded mb-2"></div>
+                <div className="h-4 w-32 bg-muted animate-pulse rounded"></div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          infraMetrics.map((metric) => (
           <Card key={metric.name} className="card-shadow transition-smooth hover:glow-primary">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{metric.name}</CardTitle>
@@ -282,7 +294,8 @@ const Infrastructure = () => {
               </div>
             </CardContent>
           </Card>
-        ))}
+          ))
+        )}
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
@@ -309,7 +322,7 @@ const Infrastructure = () => {
                   <label className="text-sm font-medium">Service</label>
                   <Select value={selectedService} onValueChange={setSelectedService}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select service" />
+                      <SelectValue placeholder="Select service (pod-name)" />
                     </SelectTrigger>
                     <SelectContent>
                       {services.map((service) => (
@@ -389,11 +402,21 @@ const Infrastructure = () => {
                   </div>
 
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="flex-1">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => handleViewLogs(service.name)}
+                    >
                       <Activity className="mr-2 h-4 w-4" />
                       Logs
                     </Button>
-                    <Button size="sm" variant="outline" className="flex-1">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => handleViewMetrics(service.name)}
+                    >
                       <TrendingUp className="mr-2 h-4 w-4" />
                       Metrics
                     </Button>
@@ -549,7 +572,11 @@ const Infrastructure = () => {
                       <p className="text-sm mb-1">{alert.message}</p>
                       <p className="text-xs text-muted-foreground">{alert.timestamp}</p>
                     </div>
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleResolveAlert(alert.id)}
+                    >
                       Resolve
                     </Button>
                   </div>
